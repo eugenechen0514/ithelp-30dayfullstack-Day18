@@ -1,13 +1,23 @@
 {
-  "name": "node-sandbox",
-  "version": "1.0.0",
-  "description": "Simple Node Sandbox",
-  "main": "src/index.js",
+  "name": "hello-mongo",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./bin/www",
   "scripts": {
-    "start": "nodemon src/index.js localhost 8080"
+    "start": "PORT=3001 node ./bin/www",
+    "startdb": "docker run --name mongo4 -v $(pwd)/data:/data/db -d -p 27017:27017 --rm mongo:4.1",
+    "stopdb": "docker stop mongo4"
   },
-  "dependencies": {},
-  "devDependencies": {
-    "nodemon": "1.18.4"
+  "dependencies": {
+    "awilix": "^4.0.0",
+    "cookie-parser": "~1.4.3",
+    "cors": "^2.8.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "hbs": "~4.0.1",
+    "http-errors": "~1.6.2",
+    "mongodb": "^3.1.8",
+    "mongoose": "^5.3.3",
+    "morgan": "~1.9.0"
   }
 }
