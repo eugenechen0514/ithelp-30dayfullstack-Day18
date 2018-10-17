@@ -58,6 +58,25 @@ function createRouter(dependencies) {
       .catch(next);
   });
 
+  function middleware1(req, res, next) {
+    // 錯誤發生(一)
+    // throw new Error('fake error by throw'); 
+    
+    // 錯誤發生(二)
+    // next(new Error('fake error by next()'));
+    // return;
+
+    console.log('middleware1');
+    next(); // 引發下一個 middleware
+  }
+  function middleware2(req, res, next) {
+    console.log('middleware2');
+    next(); // 引發下一個 middleware
+  }
+  router.get('/api/middleware', middleware1, middleware2, function (res, res, next) {
+    res.send('done');
+  });
+
   return router;
 }
 
