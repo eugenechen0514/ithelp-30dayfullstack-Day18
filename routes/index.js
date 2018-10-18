@@ -1,4 +1,5 @@
 var express = require('express');
+const UserRouter = require('./users');
 
 /**
  * 
@@ -77,6 +78,7 @@ function createRouter(dependencies) {
     res.send('done');
   });
 
+  router.use('/user', UserRouter);
   return router;
 }
 
