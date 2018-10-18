@@ -86,6 +86,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 印出所有 request 的網址
+app.use(function(req, res, next) {
+  console.log(req.originalUrl);
+  next();
+});
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
