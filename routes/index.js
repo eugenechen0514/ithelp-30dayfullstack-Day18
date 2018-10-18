@@ -23,13 +23,25 @@ function createRouter(dependencies) {
   });
 
   router.post('/api/echo', function (req, res, next) {
-    const body = req.body;
+    // decode: Buffer -> String
+    const { StringDecoder } = require('string_decoder');
+    const decoder = new StringDecoder('utf8');
 
-    mongoService.insertEcho(body)
-      .then(() => {
-        res.json(body);
-      })
-      .catch(next); // 發生 error 的話，next() 交給之後的 middleware 處理，express 有預設的處理方法
+    let rawData = [];
+    req.on('data', (data) => { // read chunk
+      rawData = rawData.concat(data);
+    })
+    req.on('end', () => {
+      const decodeData = decoder.end(rawData); // to String
+      console.log(decodeData);
+
+      const body = JSON.parse(decodeData); // to Object
+      mongoService.insertEcho(body)
+        .then(() => {
+          res.json(body);
+        })
+        .catch(next); // 發生 error 的話，next() 交給之後的 middleware 處理，express 有預設的處理方法
+    });
   });
 
   router.get('/api/mongo', function (req, res, next) {
@@ -62,12 +74,13 @@ function createRouter(dependencies) {
   function middleware1(req, res, next) {
     // 錯誤發生(一)
     // throw new Error('fake error by throw'); 
-    
+
     // 錯誤發生(二)
     // next(new Error('fake error by next()'));
     // return;
 
     console.log('middleware1');
+    // res.send('搶先送出回應'); // 這會引起錯誤，但不中斷： Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client 
     next(); // 引發下一個 middleware
   }
   function middleware2(req, res, next) {
